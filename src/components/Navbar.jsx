@@ -1,46 +1,42 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <nav className="bg-gray-900 text-white">
-      <div className="container mx-auto flex justify-between items-center py-4 px-6">
-        {/* Logo */}
-        <a href="/" className="text-2xl font-bold">
-          EventHub
-        </a>
-        {/* Links */}
-        <ul className="flex space-x-6">
-          <li>
-            <a href="#about" className="hover:text-yellow-400">
-              About
-            </a>
-          </li>
-          <li>
-            <a href="#events" className="hover:text-yellow-400">
-              Events
-            </a>
-          </li>
-          <li>
-            <a href="#contact" className="hover:text-yellow-400">
-              Contact
-            </a>
-          </li>
-          <li>
-            <a href="#signup" className="hover:text-yellow-400">
-              Sign Up/Login
-            </a>
-          </li>
-        </ul>
-        {/* Search Bar */}
-        <div className="flex items-center bg-gray-800 px-3 py-2 rounded">
-          <input
-            type="text"
-            placeholder="Search"
-            className="bg-transparent text-white outline-none"
-          />
-          <button className="text-yellow-400 ml-2">Search</button>
-        </div>
-      </div>
+    <nav className="bg-gray-800 text-white py-4 px-8 flex justify-between items-center">
+      <div className="text-2xl font-bold">EventHub</div>
+      <ul className="flex space-x-4">
+        <li>
+          <Link to="/about" className="hover:text-yellow-400">
+            About
+          </Link>
+        </li>
+        <li>
+          <Link to="/events" className="hover:text-yellow-400">
+            Events
+          </Link>
+        </li>
+        <li>
+          <Link to="/contact" className="hover:text-yellow-400">
+            Contact
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/signup"
+            className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500"
+          >
+            Sign Up
+          </Link>
+        </li>
+        <li>
+          <Link
+            to="/login"
+            className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500"
+          >
+            Login
+          </Link>
+        </li>
+      </ul>
     </nav>
   );
 };
