@@ -23,7 +23,7 @@ const Navbar = () => {
         <li>
           <Link
             to="/signup"
-            className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500"
+            className="bg-amber-200 text-black px-4 py-2 rounded hover:bg-yellow-500"
           >
             Sign Up
           </Link>
@@ -31,7 +31,7 @@ const Navbar = () => {
         <li>
           <Link
             to="/login"
-            className="bg-yellow-400 text-black px-4 py-2 rounded hover:bg-yellow-500"
+            className="bg-yellow-500 text-black px-4 py-2 rounded hover:bg-yellow-700"
           >
             Login
           </Link>
