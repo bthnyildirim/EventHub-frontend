@@ -1,14 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import About from "./components/About";
-import EventList from "./components/EventList";
 import Footer from "./components/Footer";
+import About from "./components/About";
+import EventDetails from "./components/EventDetails";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
-import "./index.css";
+import EventList from "./components/EventList";
 
 const App = () => {
+  const userType = localStorage.getItem("userType");
+
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
@@ -17,7 +19,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<About />} />
             <Route path="/about" element={<About />} />
-            <Route path="/events" element={<EventList />} />
+            <Route path="/events" element={<EventList userType={userType} />} />
+            <Route path="/events/:id" element={<EventDetails />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
             <Route

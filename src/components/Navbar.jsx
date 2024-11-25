@@ -7,7 +7,7 @@ const Navbar = () => {
       <ul className="flex space-x-4">
         <li>
           <Link to="/about" className="hover:text-yellow-400">
-            About
+            Home
           </Link>
         </li>
         <li>

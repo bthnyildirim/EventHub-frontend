@@ -1,45 +1,46 @@
 import React from "react";
-import EventDetails from "./EventDetails";
+import { Link } from "react-router-dom";
 
-const EventList = () => {
-  // Sample event data
-  const events = [
-    {
-      id: 1,
-      title: "Live Music Concert",
-      date: "October 18, 2024",
-      location: "New York City",
-      image: "https://source.unsplash.com/400x300/?music",
-    },
-    {
-      id: 2,
-      title: "Football Match",
-      date: "October 20, 2024",
-      location: "Los Angeles",
-      image: "https://source.unsplash.com/400x300/?sports",
-    },
-    {
-      id: 3,
-      title: "Jazz Night",
-      date: "October 25, 2024",
-      location: "San Francisco",
-      image: "https://source.unsplash.com/400x300/?concert",
-    },
-  ];
+const EventList = ({ events = [], userType }) => {
+  if (!events.length) {
+    return (
+      <div className="text-center text-gray-500">No events available.</div>
+    );
+  }
 
   return (
-    <section id="events" className="py-16 bg-white">
-      <div className="container mx-auto">
-        <h2 className="text-4xl font-bold text-center mb-12">
-          Upcoming Events
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event) => (
-            <EventDetails key={event.id} event={event} />
-          ))}
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 px-6">
+      {events.map((event) => (
+        <div
+          key={event._id}
+          className="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition"
+        >
+          <h3 className="text-xl font-bold">{event.title}</h3>
+          <p className="text-gray-500">
+            {new Date(event.dateTime).toDateString()}
+          </p>
+          <p className="text-gray-600">
+            {event.venue?.name || "No Venue Assigned"}
+          </p>
+          <Link
+            to={`/events/${event._id}`}
+            className="text-yellow-500 hover:text-yellow-600 mt-4 block"
+          >
+            View Details
+          </Link>
+          {userType === "organizer" && (
+            <div className="mt-4 flex space-x-2">
+              <button className="bg-blue-500 text-white px-4 py-2 rounded">
+                Edit
+              </button>
+              <button className="bg-red-500 text-white px-4 py-2 rounded">
+                Delete
+              </button>
+            </div>
+          )}
         </div>
-      </div>
-    </section>
+      ))}
+    </div>
   );
 };
 

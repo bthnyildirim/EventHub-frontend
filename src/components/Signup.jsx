@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-
+import { useNavigate } from "react-router-dom";
+import axiosInstance from "../api/api";
 const SignupForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -9,10 +10,31 @@ const SignupForm = () => {
   const [location, setLocation] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Add form submission logic here
-    console.log({ email, password, name, role, profilePic, location });
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Prevent form from refreshing the page
+    setErrorMessage(undefined);
+
+    try {
+      const response = await axiosInstance.post(`/auth/signup`, {
+        email,
+        password,
+        name,
+        userType: role,
+        profilePic,
+        location,
+      });
+      console.log(response);
+      console.log(response.status);
+      if (response.status === 200 || response.status === 201) {
+        navigate("/login"); // Redirect to login on successful signup
+      } else {
+        throw new Error(response.data.message || "Signup failed");
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
   };
 
   return (

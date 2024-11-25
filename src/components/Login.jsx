@@ -11,7 +11,7 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/auth/login`,
+        `${import.meta.env.VITE_API_URL}/auth/login`,
         {
           method: "POST",
           headers: {
@@ -27,7 +27,6 @@ const Login = () => {
       }
 
       const data = await response.json();
-      // Save token or user info to localStorage or context
       localStorage.setItem("token", data.token);
       console.log("Login successful:", data);
       window.location.href = "/";
