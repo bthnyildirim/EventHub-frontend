@@ -14,7 +14,7 @@ const CreateEvent = ({ onEventAdded }) => {
     setErrorMessage(null);
     setSuccessMessage(null);
 
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("authToken");
 
     if (!token) {
       setErrorMessage(
@@ -24,20 +24,23 @@ const CreateEvent = ({ onEventAdded }) => {
     }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/events`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title,
-          description,
-          dateTime,
-          pricing,
-          venue,
-        }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/events`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title,
+            description,
+            dateTime,
+            pricing,
+            venue,
+          }),
+        }
+      );
 
       if (!response.ok) {
         const errorData = await response.json();

@@ -19,13 +19,15 @@ const EventsPage = () => {
       .catch((error) => console.error("Error fetching events:", error));
 
     // Decode token to check user type
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("authToken");
+    console.log(localStorage.getItem("authToken"));
     if (token) {
       axios
         .get(`${import.meta.env.VITE_API_URL}/auth/verify`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((response) => {
+          console.log("User type:", response.data.userType);
           if (response.data.userType === "organizer") {
             setIsOrganizer(true);
           }
