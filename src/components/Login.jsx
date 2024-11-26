@@ -1,38 +1,45 @@
-import React, { useState } from "react";
+import { useState, useContext } from "react";
+import axios from "axios";
+import { AuthContext } from "../context/auth.context.jsx";
+import { Link, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
+function LoginPage(props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(undefined);
 
-  const handleLogin = async (e) => {
+  const navigate = useNavigate();
+
+  const { storeToken, authenticateUser } = useContext(AuthContext);
+
+  const handleEmail = (e) => setEmail(e.target.value);
+  const handlePassword = (e) => setPassword(e.target.value);
+
+  const handleLoginSubmit = (e) => {
     e.preventDefault();
-    setErrorMessage(null);
+    const requestBody = { email, password };
 
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/login`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
-        }
-      );
+    axios
+      .post(`${VITE_API_URL}/auth/login`, requestBody)
+      .then((response) => {
+        console.log("JWT token", response.data.authToken);
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.message || "Failed to login");
-      }
+        // Store token and authenticate user
+        storeToken(response.data.authToken);
+        console.log(response.data.authToken);
+        authenticateUser();
 
-      const data = await response.json();
-      localStorage.setItem("token", data.token);
-      console.log("Login successful:", data);
-      window.location.href = "/";
-    } catch (error) {
-      setErrorMessage(error.message);
-    }
+        // Redirect to homepage
+        navigate("/events");
+      })
+      .catch((error) => {
+        const errorDescription =
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.";
+        setErrorMessage(errorDescription);
+      });
   };
 
   return (
@@ -44,7 +51,7 @@ const Login = () => {
             {errorMessage}
           </div>
         )}
-        <form onSubmit={handleLogin} className="space-y-4">
+        <form onSubmit={handleLoginSubmit} className="space-y-4">
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2">
               Email
@@ -52,7 +59,7 @@ const Login = () => {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleEmail}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Email"
               required
@@ -65,7 +72,7 @@ const Login = () => {
             <input
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handlePassword}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               placeholder="Password"
               required
@@ -80,9 +87,17 @@ const Login = () => {
             </button>
           </div>
         </form>
+        <div className="text-center mt-4">
+          <p className="text-sm">
+            Don't have an account?{" "}
+            <Link to="/signup" className="text-yellow-500 hover:underline">
+              Sign up
+            </Link>
+          </p>
+        </div>
       </div>
     </div>
   );
-};
+}
 
-export default Login;
+export default LoginPage;

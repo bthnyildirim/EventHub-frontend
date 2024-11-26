@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import EventList from "./EventList";
+import EventsPage from "./EventsPage";
 
 const About = () => {
   const [events, setEvents] = useState([]);
@@ -54,7 +54,7 @@ const About = () => {
         {error ? (
           <div className="text-center text-red-500">{error}</div>
         ) : (
-          <EventList events={events} />
+          <EventsPage events={events} />
         )}
       </section>
     </>

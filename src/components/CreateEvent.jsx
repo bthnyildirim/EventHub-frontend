@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const CreateEvent = () => {
+const CreateEvent = ({ onEventAdded }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dateTime, setDateTime] = useState("");
@@ -44,12 +44,18 @@ const CreateEvent = () => {
         throw new Error(errorData.message || "Failed to create the event.");
       }
 
+      const newEvent = await response.json();
       setSuccessMessage("Event created successfully!");
+
+      // Reset form fields
       setTitle("");
       setDescription("");
       setDateTime("");
       setPricing({ min: "", max: "" });
       setVenue("");
+
+      // Notify parent component
+      onEventAdded(newEvent);
     } catch (error) {
       setErrorMessage(error.message);
     }
