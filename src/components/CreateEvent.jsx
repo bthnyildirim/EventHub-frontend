@@ -1,13 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const CreateEvent = ({ onEventAdded }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dateTime, setDateTime] = useState("");
   const [pricing, setPricing] = useState({ min: "", max: "" });
-  const [venue, setVenue] = useState("");
+  const [venues, setVenues] = useState([]); // To store list of venues
+  const [venue, setVenue] = useState(""); // To store the selected venue ID
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
+
+  // Fetch venues when the component is mounted
+  useEffect(() => {
+    const fetchVenues = async () => {
+      try {
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/api/venues`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch venues");
+        }
+        const data = await response.json();
+        setVenues(data);
+      } catch (error) {
+        console.error("Error fetching venues:", error);
+        setErrorMessage("Failed to load venues. Please try again later.");
+      }
+    };
+
+    fetchVenues();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -130,14 +152,20 @@ const CreateEvent = ({ onEventAdded }) => {
         </div>
         <div>
           <label className="block font-bold">Venue</label>
-          <input
-            type="text"
+          <select
             value={venue}
             onChange={(e) => setVenue(e.target.value)}
             className="w-full border px-4 py-2 rounded"
-            placeholder="Venue ID"
             required
-          />
+          >
+            <option value="">Select a Venue</option>
+            {venues.map((venue) => (
+              <option key={venue._id} value={venue._id}>
+                {venue.name} - {venue.location.town},{" "}
+                {venue.location.streetName}
+              </option>
+            ))}
+          </select>
         </div>
         <button
           type="submit"
