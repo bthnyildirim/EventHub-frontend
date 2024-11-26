@@ -10,7 +10,7 @@ const EventsPage = () => {
   const [isOrganizer, setIsOrganizer] = useState(false);
   const [showCreateEventForm, setShowCreateEventForm] = useState(false);
   const [showCreateVenueForm, setShowCreateVenueForm] = useState(false);
-  const [editingEvent, setEditingEvent] = useState(null); // Track the event being edited
+  const [editingEvent, setEditingEvent] = useState(null);
 
   // Fetch events, venues, and check user type on component load
   useEffect(() => {
@@ -46,29 +46,25 @@ const EventsPage = () => {
     }
   }, []);
 
-  // Handle event addition
   const handleEventAdded = (newEvent) => {
     setEvents((prevEvents) => [...prevEvents, newEvent]);
-    setShowCreateEventForm(false); // Hide the form after adding the event
+    setShowCreateEventForm(false);
   };
 
-  // Handle event update
   const handleEventUpdated = (updatedEvent) => {
     setEvents((prevEvents) =>
       prevEvents.map((event) =>
         event._id === updatedEvent._id ? updatedEvent : event
       )
     );
-    setEditingEvent(null); // Exit edit mode
+    setEditingEvent(null);
   };
 
-  // Handle venue addition
   const handleVenueAdded = (newVenue) => {
     setVenues((prevVenues) => [...prevVenues, newVenue]);
-    setShowCreateVenueForm(false); // Hide the form after adding the venue
+    setShowCreateVenueForm(false);
   };
 
-  // Handle event deletion
   const handleDeleteEvent = (eventId) => {
     const token = localStorage.getItem("authToken");
     axios
@@ -83,7 +79,6 @@ const EventsPage = () => {
       .catch((error) => console.error("Error deleting event:", error));
   };
 
-  // Handle venue deletion
   const handleDeleteVenue = (venueId) => {
     const token = localStorage.getItem("authToken");
     axios
@@ -102,7 +97,6 @@ const EventsPage = () => {
     <div className="p-6">
       <h1 className="text-3xl font-bold mb-6">Events and Venues</h1>
 
-      {/* Section for Events */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold mb-4">Events</h2>
 
@@ -116,16 +110,13 @@ const EventsPage = () => {
         )}
 
         {showCreateEventForm && (
-          <CreateEvent
-            onEventAdded={handleEventAdded}
-            venues={venues} // Pass venues for selection
-          />
+          <CreateEvent onEventAdded={handleEventAdded} venues={venues} />
         )}
 
         {editingEvent && (
           <EditEvent
             event={editingEvent}
-            venues={venues} // Pass venues for selection
+            venues={venues}
             onEventUpdated={handleEventUpdated}
             onCancel={() => setEditingEvent(null)}
           />
@@ -136,37 +127,52 @@ const EventsPage = () => {
             {events.map((event) => (
               <div
                 key={event._id}
-                className="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition"
+                className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition"
               >
-                <h3 className="text-xl font-bold">{event.title}</h3>
-                <p className="text-gray-500">
-                  {new Date(event.dateTime).toDateString()}
-                </p>
-                <p className="text-gray-600">{event.description}</p>
-                <p className="text-gray-600">
-                  Venue: {event.venue?.name || "No Venue Assigned"}
-                </p>
-                <img
-                  src={event.image || "/placeholder.jpg"}
-                  alt={event.title}
-                  className="w-full h-32 object-cover rounded mt-2"
-                />
-                {isOrganizer && (
-                  <div className="mt-4 flex space-x-2">
-                    <button
-                      onClick={() => setEditingEvent(event)}
-                      className="bg-blue-500 text-white px-4 py-2 rounded"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteEvent(event._id)}
-                      className="bg-red-500 text-white px-4 py-2 rounded"
-                    >
-                      Delete
-                    </button>
-                  </div>
-                )}
+                {/* Image with Consistent Card Size */}
+                <div className="relative h-48 w-full overflow-hidden bg-gray-200">
+                  <img
+                    src={`${import.meta.env.VITE_API_URL}${event.image}`}
+                    alt={event.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                </div>
+
+                <div className="p-4">
+                  <h3 className="text-xl font-bold mb-2">{event.title}</h3>
+                  <p className="text-gray-500 mb-2">
+                    {new Date(event.dateTime).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                  <p className="text-gray-600 mb-2">{event.description}</p>
+                  <p className="text-gray-600 mb-2">
+                    Venue: {event.venue?.name || "No Venue Assigned"}
+                  </p>
+                  <p className="text-gray-600">
+                    Price Range: ${event.pricing?.min || "0"} - $
+                    {event.pricing?.max || "0"}
+                  </p>
+                  {isOrganizer && (
+                    <div className="mt-4 flex space-x-2">
+                      <button
+                        onClick={() => setEditingEvent(event)}
+                        className="bg-blue-500 text-white px-4 py-2 rounded"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDeleteEvent(event._id)}
+                        className="bg-red-500 text-white px-4 py-2 rounded"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -179,7 +185,6 @@ const EventsPage = () => {
         )}
       </div>
 
-      {/* Section for Venues */}
       <div>
         <h2 className="text-2xl font-bold mb-4">Venues</h2>
 

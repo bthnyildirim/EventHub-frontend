@@ -7,6 +7,7 @@ const CreateEvent = ({ onEventAdded }) => {
   const [pricing, setPricing] = useState({ min: "", max: "" });
   const [venues, setVenues] = useState([]); // To store list of venues
   const [venue, setVenue] = useState(""); // To store the selected venue ID
+  const [image, setImage] = useState(null); // To store the selected image file
   const [errorMessage, setErrorMessage] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
@@ -45,22 +46,26 @@ const CreateEvent = ({ onEventAdded }) => {
       return;
     }
 
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("dateTime", dateTime);
+    formData.append("pricing[min]", pricing.min);
+    formData.append("pricing[max]", pricing.max);
+    formData.append("venue", venue);
+    if (image) {
+      formData.append("image", image);
+    }
+
     try {
       const response = await fetch(
         `${import.meta.env.VITE_API_URL}/api/events`,
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({
-            title,
-            description,
-            dateTime,
-            pricing,
-            venue,
-          }),
+          body: formData,
         }
       );
 
@@ -78,6 +83,7 @@ const CreateEvent = ({ onEventAdded }) => {
       setDateTime("");
       setPricing({ min: "", max: "" });
       setVenue("");
+      setImage(null);
 
       // Notify parent component
       onEventAdded(newEvent);
@@ -166,6 +172,15 @@ const CreateEvent = ({ onEventAdded }) => {
               </option>
             ))}
           </select>
+        </div>
+        <div>
+          <label className="block font-bold">Event Image</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
+            className="w-full border px-4 py-2 rounded"
+          />
         </div>
         <button
           type="submit"
