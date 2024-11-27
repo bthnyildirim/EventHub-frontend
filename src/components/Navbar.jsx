@@ -1,9 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../context/auth.context";
 
 const Navbar = () => {
   const { isLoggedIn, logOutUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logOutUser(); // Call the logout function from AuthContext
+    navigate("/"); // Redirect the user to the home page
+  };
 
   return (
     <nav className="bg-gray-800 text-white py-4 px-8 flex justify-between items-center">
@@ -48,7 +54,7 @@ const Navbar = () => {
         ) : (
           <li>
             <button
-              onClick={logOutUser}
+              onClick={handleLogout}
               className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700"
             >
               Logout

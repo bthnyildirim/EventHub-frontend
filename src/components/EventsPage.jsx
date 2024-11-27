@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import CreateEvent from "./CreateEvent";
 import CreateVenue from "./CreateVenue";
@@ -125,55 +126,64 @@ const EventsPage = () => {
         {!editingEvent && events.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {events.map((event) => (
-              <div
+              <Link
                 key={event._id}
-                className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition"
+                to={`/events/${event._id}`}
+                className="block"
               >
-                {/* Image with Consistent Card Size */}
-                <div className="relative h-48 w-full overflow-hidden bg-gray-200">
-                  <img
-                    src={`${import.meta.env.VITE_API_URL}${event.image}`}
-                    alt={event.title}
-                    className="absolute inset-0 w-full h-full object-cover"
-                  />
-                </div>
+                <div className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition">
+                  {/* Image with Consistent Card Size */}
+                  <div className="relative h-48 w-full overflow-hidden bg-gray-200">
+                    <img
+                      src={`${import.meta.env.VITE_API_URL}${event.image}`}
+                      alt={event.title}
+                      className="absolute inset-0 w-full h-full object-cover"
+                    />
+                  </div>
 
-                <div className="p-4">
-                  <h3 className="text-xl font-bold mb-2">{event.title}</h3>
-                  <p className="text-gray-500 mb-2">
-                    {new Date(event.dateTime).toLocaleDateString("en-US", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
-                  <p className="text-gray-600 mb-2">{event.description}</p>
-                  <p className="text-gray-600 mb-2">
-                    Venue: {event.venue?.name || "No Venue Assigned"}
-                  </p>
-                  <p className="text-gray-600">
-                    Price Range: ${event.pricing?.min || "0"} - $
-                    {event.pricing?.max || "0"}
-                  </p>
-                  {isOrganizer && (
-                    <div className="mt-4 flex space-x-2">
-                      <button
-                        onClick={() => setEditingEvent(event)}
-                        className="bg-blue-500 text-white px-4 py-2 rounded"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDeleteEvent(event._id)}
-                        className="bg-red-500 text-white px-4 py-2 rounded"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  )}
+                  <div className="p-4">
+                    <h3 className="text-xl font-bold mb-2">{event.title}</h3>
+                    <p className="text-gray-500 mb-2">
+                      {new Date(event.dateTime).toLocaleDateString("en-US", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </p>
+                    <p className="text-gray-600 mb-2">{event.description}</p>
+                    <p className="text-gray-600 mb-2">
+                      Venue: {event.venue?.name || "No Venue Assigned"}
+                    </p>
+                    <p className="text-gray-600">
+                      Price Range: ${event.pricing?.min || "0"} - $
+                      {event.pricing?.max || "0"}
+                    </p>
+                    {isOrganizer && (
+                      <div className="mt-4 flex space-x-2">
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setEditingEvent(event);
+                          }}
+                          className="bg-blue-500 text-white px-4 py-2 rounded"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleDeleteEvent(event._id);
+                          }}
+                          className="bg-red-500 text-white px-4 py-2 rounded"
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              </Link>
             ))}
           </div>
         ) : (
