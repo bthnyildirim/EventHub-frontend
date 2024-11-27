@@ -44,6 +44,7 @@ const EventsPage = () => {
     }
   }, []);
 
+  // Sort events by date before rendering
   const sortedEvents = events.slice().sort((a, b) => {
     return new Date(a.dateTime) - new Date(b.dateTime);
   });
@@ -51,6 +52,15 @@ const EventsPage = () => {
   const handleEventAdded = (newEvent) => {
     setEvents((prevEvents) => [...prevEvents, newEvent]);
     setShowCreateEventForm(false);
+  };
+
+  const handleEventUpdated = (updatedEvent) => {
+    setEvents((prevEvents) =>
+      prevEvents.map((event) =>
+        event._id === updatedEvent._id ? updatedEvent : event
+      )
+    );
+    setEditingEvent(null);
   };
 
   const handleVenueAdded = (newVenue) => {
@@ -216,12 +226,9 @@ const EventsPage = () => {
                     Location: {venue.location.town}, {venue.location.streetName}
                   </p>
                   <div className="mt-4 flex space-x-2">
-                    <button className="px-4 py-2 bg-gradient-to-r from-green-400 to-teal-500 text-white font-bold rounded flex items-center">
-                      <i className="fas fa-edit mr-2"></i>Edit
-                    </button>
                     <button
-                      onClick={() => handleDeleteVenue(venue._id)}
                       className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded flex items-center"
+                      onClick={() => handleDeleteVenue(venue._id)}
                     >
                       <i className="fas fa-trash-alt mr-2"></i>Delete
                     </button>
