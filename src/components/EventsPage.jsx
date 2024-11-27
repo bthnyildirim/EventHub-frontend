@@ -15,7 +15,6 @@ const EventsPage = () => {
 
   // Fetch events, venues, and check user type on component load
   useEffect(() => {
-    // Fetch all events
     axios
       .get(`${import.meta.env.VITE_API_URL}/api/events`)
       .then((response) => {
@@ -23,7 +22,6 @@ const EventsPage = () => {
       })
       .catch((error) => console.error("Error fetching events:", error));
 
-    // Fetch all venues
     axios
       .get(`${import.meta.env.VITE_API_URL}/api/venues`)
       .then((response) => {
@@ -31,7 +29,6 @@ const EventsPage = () => {
       })
       .catch((error) => console.error("Error fetching venues:", error));
 
-    // Decode token to check user type
     const token = localStorage.getItem("authToken");
     if (token) {
       axios
@@ -47,7 +44,6 @@ const EventsPage = () => {
     }
   }, []);
 
-  // Sort events by date before rendering
   const sortedEvents = events.slice().sort((a, b) => {
     return new Date(a.dateTime) - new Date(b.dateTime);
   });
@@ -55,15 +51,6 @@ const EventsPage = () => {
   const handleEventAdded = (newEvent) => {
     setEvents((prevEvents) => [...prevEvents, newEvent]);
     setShowCreateEventForm(false);
-  };
-
-  const handleEventUpdated = (updatedEvent) => {
-    setEvents((prevEvents) =>
-      prevEvents.map((event) =>
-        event._id === updatedEvent._id ? updatedEvent : event
-      )
-    );
-    setEditingEvent(null);
   };
 
   const handleVenueAdded = (newVenue) => {
@@ -101,18 +88,19 @@ const EventsPage = () => {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">Events and Venues</h1>
-
       <div className="mb-8">
-        <h2 className="text-2xl font-bold mb-4">Events</h2>
+        <h1 className="text-2xl font-bold mb-4">EVENTS</h1>
 
         {isOrganizer && !editingEvent && (
-          <button
-            onClick={() => setShowCreateEventForm(!showCreateEventForm)}
-            className="bg-blue-500 text-white px-4 py-2 rounded mb-4"
-          >
-            {showCreateEventForm ? "Cancel" : "Create Event"}
-          </button>
+          <div className="flex items-center space-x-4">
+            <button
+              onClick={() => setShowCreateEventForm(!showCreateEventForm)}
+              className="px-4 py-2 mb-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white font-bold rounded flex items-center"
+            >
+              <i className="fas fa-plus-circle mr-2"></i>
+              {showCreateEventForm ? "Cancel" : "Create Event"}
+            </button>
+          </div>
         )}
 
         {showCreateEventForm && (
@@ -137,7 +125,6 @@ const EventsPage = () => {
                 className="block"
               >
                 <div className="bg-white shadow-lg rounded-lg overflow-hidden hover:shadow-xl transition">
-                  {/* Image with Consistent Card Size */}
                   <div className="relative h-48 w-full overflow-hidden bg-gray-200">
                     <img
                       src={`${import.meta.env.VITE_API_URL}${event.image}`}
@@ -171,18 +158,18 @@ const EventsPage = () => {
                             e.preventDefault();
                             setEditingEvent(event);
                           }}
-                          className="bg-blue-500 text-white px-4 py-2 rounded"
+                          className="px-4 py-2 bg-gradient-to-r from-green-400 to-teal-500 text-white font-bold rounded flex items-center"
                         >
-                          Edit
+                          <i className="fas fa-edit mr-2"></i>Edit
                         </button>
                         <button
                           onClick={(e) => {
                             e.preventDefault();
                             handleDeleteEvent(event._id);
                           }}
-                          className="bg-red-500 text-white px-4 py-2 rounded"
+                          className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded flex items-center"
                         >
-                          Delete
+                          <i className="fas fa-trash-alt mr-2"></i>Delete
                         </button>
                       </div>
                     )}
@@ -200,52 +187,55 @@ const EventsPage = () => {
         )}
       </div>
 
-      <div>
-        <h2 className="text-2xl font-bold mb-4">Venues</h2>
+      {isOrganizer && (
+        <div id="create-venue">
+          <h2 className="text-2xl font-bold mb-4">Venues</h2>
 
-        {isOrganizer && (
           <button
             onClick={() => setShowCreateVenueForm(!showCreateVenueForm)}
-            className="bg-green-500 text-white px-4 py-2 rounded mb-4"
+            className="px-4 py-2 mb-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white font-bold rounded flex items-center"
           >
+            <i className="fas fa-plus-circle mr-2"></i>
             {showCreateVenueForm ? "Cancel" : "Create Venue"}
           </button>
-        )}
 
-        {showCreateVenueForm && <CreateVenue onVenueAdded={handleVenueAdded} />}
+          {showCreateVenueForm && (
+            <CreateVenue onVenueAdded={handleVenueAdded} />
+          )}
 
-        {venues.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {venues.map((venue) => (
-              <div
-                key={venue._id}
-                className="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition"
-              >
-                <h3 className="text-xl font-bold">{venue.name}</h3>
-                <p className="text-gray-500">Capacity: {venue.capacity}</p>
-                <p className="text-gray-600">
-                  Location: {venue.location.town}, {venue.location.streetName}
-                </p>
-                {isOrganizer && (
+          {venues.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {venues.map((venue) => (
+                <div
+                  key={venue._id}
+                  className="bg-white shadow-lg rounded-lg p-4 hover:shadow-xl transition"
+                >
+                  <h3 className="text-xl font-bold">{venue.name}</h3>
+                  <p className="text-gray-500">Capacity: {venue.capacity}</p>
+                  <p className="text-gray-600">
+                    Location: {venue.location.town}, {venue.location.streetName}
+                  </p>
                   <div className="mt-4 flex space-x-2">
-                    <button className="bg-blue-500 text-white px-4 py-2 rounded">
-                      Edit
+                    <button className="px-4 py-2 bg-gradient-to-r from-green-400 to-teal-500 text-white font-bold rounded flex items-center">
+                      <i className="fas fa-edit mr-2"></i>Edit
                     </button>
                     <button
                       onClick={() => handleDeleteVenue(venue._id)}
-                      className="bg-red-500 text-white px-4 py-2 rounded"
+                      className="px-4 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white font-bold rounded flex items-center"
                     >
-                      Delete
+                      <i className="fas fa-trash-alt mr-2"></i>Delete
                     </button>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center text-gray-500">No venues available.</div>
-        )}
-      </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center text-gray-500">
+              No venues available.
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

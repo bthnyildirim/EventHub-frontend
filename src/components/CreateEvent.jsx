@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom"; // Import Link to handle navigation
 
 const CreateEvent = ({ onEventAdded }) => {
   const [title, setTitle] = useState("");
@@ -172,6 +173,12 @@ const CreateEvent = ({ onEventAdded }) => {
               </option>
             ))}
           </select>
+          <a
+            href="#create-venue"
+            className="text-blue-500 text-sm underline mt-2 block"
+          >
+            Don't see your venue? Create a new one here.
+          </a>
         </div>
         <div>
           <label className="block font-bold">Event Image</label>
