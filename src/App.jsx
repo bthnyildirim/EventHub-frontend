@@ -9,6 +9,7 @@ import Login from "./components/Login";
 import EventsPage from "./components/EventsPage";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsService from "./pages/TermsService";
+import Contact from "./pages/Contact";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/terms-service" element={<TermsService />} />
+          <Route path="/contact" element={<Contact />} />
           <Route
             path="*"
             element={
