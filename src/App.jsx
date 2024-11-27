@@ -7,6 +7,8 @@ import EventDetails from "./components/EventDetails";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import EventsPage from "./components/EventsPage";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsService from "./pages/TermsService";
 
 const App = () => {
   return (
@@ -21,6 +23,8 @@ const App = () => {
           <Route path="/venue" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-service" element={<TermsService />} />
           <Route
             path="*"
             element={

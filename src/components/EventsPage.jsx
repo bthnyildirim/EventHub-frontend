@@ -47,6 +47,11 @@ const EventsPage = () => {
     }
   }, []);
 
+  // Sort events by date before rendering
+  const sortedEvents = events.slice().sort((a, b) => {
+    return new Date(a.dateTime) - new Date(b.dateTime);
+  });
+
   const handleEventAdded = (newEvent) => {
     setEvents((prevEvents) => [...prevEvents, newEvent]);
     setShowCreateEventForm(false);
@@ -123,9 +128,9 @@ const EventsPage = () => {
           />
         )}
 
-        {!editingEvent && events.length > 0 ? (
+        {!editingEvent && sortedEvents.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {events.map((event) => (
+            {sortedEvents.map((event) => (
               <Link
                 key={event._id}
                 to={`/events/${event._id}`}
