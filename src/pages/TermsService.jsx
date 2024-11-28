@@ -5,7 +5,7 @@ const TermsService = () => {
     <div className="container mx-auto p-6 text-gray-800">
       <div className="flex flex-col items-center">
         <img
-          src="public\images\work-in-progress.JPG"
+          src="/images/work-in-progress.JPG"
           alt="Work in Progress"
           className="w-1/2 h-auto mb-6"
         />
