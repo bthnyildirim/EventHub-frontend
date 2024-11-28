@@ -6,7 +6,6 @@ const SignupForm = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [role, setRole] = useState("fan");
-  const [profilePic, setProfilePic] = useState("");
   const [location, setLocation] = useState("");
   const [errorMessage, setErrorMessage] = useState(undefined);
 
@@ -22,7 +21,6 @@ const SignupForm = () => {
         password,
         name,
         userType: role,
-        profilePic,
         location,
       });
       console.log(response);
@@ -112,18 +110,6 @@ const SignupForm = () => {
                 <span className="ml-2">Fan</span>
               </label>
             </div>
-          </div>
-          <div>
-            <label className="block text-gray-700 text-sm font-bold mb-2">
-              Profile Picture
-            </label>
-            <input
-              type="text"
-              value={profilePic}
-              onChange={(e) => setProfilePic(e.target.value)}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              placeholder="Profile Picture URL"
-            />
           </div>
           <div>
             <label className="block text-gray-700 text-sm font-bold mb-2">
