@@ -12,7 +12,7 @@ const ContactPage = () => {
           <div className="flex justify-center mb-4">
             <div className="rounded-full border-4 border-gray-300 overflow-hidden h-32 w-32">
               <img
-                src="public\images\profile-image.JPG"
+                src="/images/profile-image.JPG"
                 alt="Your Profile"
                 className="h-full w-full object-cover"
               />
